@@ -1,6 +1,6 @@
 import { useAuth, useSignUp } from "@clerk/expo";
 import { useState } from "react";
-import { Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function SignInScreen() {
   const [firstname, setFirstname] = useState("");
@@ -180,6 +180,35 @@ export default function SignInScreen() {
                 {passwordError}
               </Text>
             ) : null}
+
+            <TouchableOpacity disabled={isLoaded}
+              style={{
+                backgroundColor: "#333333",
+                borderRadius: 50,
+                borderWidth: 1,
+                borderColor: "#333333",
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 24,
+              }}
+            >
+              {isLoaded ? (
+                <ActivityIndicator color="white" />
+
+              ) : (
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >Create account</Text>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
