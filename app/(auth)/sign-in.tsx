@@ -1,4 +1,5 @@
 import { useAuth, useSignUp } from "@clerk/expo";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -12,7 +13,22 @@ export default function SignInScreen() {
   const { signUp, isLoaded } = useSignUp();
   const { isSignedIn } = useAuth();
 
+  const onSignuppress = async () => {
+    const { error } = await signUp?.password({
+      firstName: firstname,
+      lastName: lastname,
+      emailAddress: email,
+      password: password,
+    });
+    if (error) {
+      console.log(error);
 
+    }
+    await signUp.verifications.create({ strategy: "email" })
+    // router.push("/");
+
+
+  }
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "#000000" }}
@@ -209,7 +225,51 @@ export default function SignInScreen() {
                 >Create account</Text>
               )}
             </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 24,
+                gap: 8,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#ffffff",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  fontFamily: "Poppins-SemiBold",
+                }}
+              >Already have an account? </Text>
+              <TouchableOpacity
+                // onPress={() => router.push("/sign-in")}
+                style={{
+                  backgroundColor: "#333333",
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: "#333333",
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Link href="/sign-in">
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      fontFamily: "Poppins-SemiBold",
+                    }}
+                  >Sign in</Text>
+                </Link>
+              </TouchableOpacity>
+            </View>
           </View>
+          <View nativeID="clerk-captcha" />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
