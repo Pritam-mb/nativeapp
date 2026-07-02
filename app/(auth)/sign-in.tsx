@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
-import { ScrollView, Text } from "react-native";
+import { Image, ScrollView, View } from "react-native";
+// import { View } from "react-native-reanimated/lib/typescript/Animated";
 
 export default function SignInScreen() {
   return (
@@ -9,7 +10,13 @@ export default function SignInScreen() {
         justifyContent: "center",
         alignItems: "center"
       }}>
-      <Text>Sign In</Text>
+      {/* <Text>Sign In</Text> */}
+      <View>
+
+        <Image
+          source={require("../../assets/images/logo.png")}
+        />
+      </View>
       <Link href="/(root)/(tabs)">Go to Home</Link>
     </ScrollView>
   );
