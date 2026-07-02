@@ -8,7 +8,8 @@ export default function SignInScreen() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState("")
-  const { signUp, isLoaded, errors } = useSignUp();
+  const [passwordError, setPasswordError] = useState("")
+  const { signUp, isLoaded } = useSignUp();
   const { isSignedIn } = useAuth();
 
 
@@ -141,7 +142,9 @@ export default function SignInScreen() {
 
             />
             {emailError ? (
-              <Text style={{ color: "#ff4d4d", marginTop: 8, paddingHorizontal: 10 }}>{emailError}</Text>
+              <Text style={{ color: "#ef4444", marginBottom: 16, marginTop: 8, paddingHorizontal: 10 }}>
+                {emailError}
+              </Text>
             ) : null}
           </View>
 
@@ -150,7 +153,15 @@ export default function SignInScreen() {
               placeholder="Password"
               placeholderTextColor="#888888"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(val) => {
+                setPassword(val);
+                if (passwordError) setPasswordError("");
+              }}
+              onBlur={() => {
+                if (password.length > 0 && password.length < 8) {
+                  setPasswordError("Password must be at least 8 characters long");
+                }
+              }}
               secureTextEntry
               style={{
                 fontSize: 16,
@@ -164,9 +175,11 @@ export default function SignInScreen() {
                 paddingHorizontal: 16,
               }}
             />
-            {errors.fields.password && (
-              <Text className="text-red-500 mb-4">{errors.fields.password.message}</Text>
-            )}
+            {passwordError ? (
+              <Text style={{ color: "#ef4444", marginBottom: 16, marginTop: 8, paddingHorizontal: 10 }}>
+                {passwordError}
+              </Text>
+            ) : null}
           </View>
         </View>
       </ScrollView>
