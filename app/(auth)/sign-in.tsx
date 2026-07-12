@@ -1,5 +1,4 @@
 import { useAuth, useSignUp } from "@clerk/expo";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -210,6 +209,7 @@ export default function SignInScreen() {
                 alignItems: "center",
                 marginTop: 24,
               }}
+            // onPress={onsignup}
             >
               {isLoaded ? (
                 <ActivityIndicator color="white" />
@@ -242,31 +242,16 @@ export default function SignInScreen() {
                   fontFamily: "Poppins-SemiBold",
                 }}
               >Already have an account? </Text>
-              <TouchableOpacity
-                // onPress={() => router.push("/sign-in")}
+              <Text
+                onPress={() => router.push("/sign-in")}
                 style={{
-                  backgroundColor: "#333333",
-                  borderRadius: 50,
-                  borderWidth: 1,
-                  borderColor: "#333333",
-                  paddingVertical: 14,
-                  paddingHorizontal: 16,
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  color: "#e7430dff",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  fontFamily: "Poppins-SemiBold",
                 }}
-              >
-                <Link href="/sign-in">
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      fontFamily: "Poppins-SemiBold",
-                    }}
-                  >Sign in</Text>
-                </Link>
-              </TouchableOpacity>
+              >Sign in</Text>
+
             </View>
           </View>
           <View nativeID="clerk-captcha" />
