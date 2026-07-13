@@ -1,5 +1,5 @@
 import { useAuth, useSignUp } from "@clerk/expo";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -10,9 +10,37 @@ export default function SignInScreen() {
   const [password, setPassword] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
-  const { signUp, isLoaded } = useSignUp();
+  const { signUp, fetchStatus } = useSignUp();
   const { isSignedIn } = useAuth();
   const [code, setCode] = useState("")
+  const router = useRouter()
+  const isLoaded = fetchStatus === "fetching";
+
+  if (signUp.status === "complete" || isSignedIn) {
+    return null;
+  }
+
+
+  const onVerify = async () => {
+    await signUp.verifications.verifyEmailCode({
+      code,
+    });
+
+    if (signUp.status === "complete") {
+      await signUp.finalize({
+        navigate: ({ session, decorateUrl }) => {
+          if (session?.currentTask) {
+            console.log(session?.currentTask);
+            return;
+          }
+          const url = decorateUrl("/");
+          router.replace(url as any);
+        },
+      });
+    } else {
+      console.error("Sign-up attempt not complete:", signUp);
+    }
+  };
 
   const onSignuppress = async () => {
     const { error } = await signUp?.password({
@@ -107,29 +135,25 @@ export default function SignInScreen() {
             />
 
             <TouchableOpacity
-              style={{
-                backgroundColor: "#333333",
-                borderRadius: 50,
-                borderWidth: 1,
-                borderColor: "#333333",
-                paddingVertical: 16,
-                paddingHorizontal: 16,
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 32,
-              }}
-            // onPress={onVerify}
+              onPress={onVerify}
+              disabled={isLoaded}
+              className="w-full bg-blue-600 py-4 rounded-2xl items-center mb-4 gap-2 mt-2"
             >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  fontFamily: "Poppins-SemiBold",
-                }}
-              >
-                Verify Account
+              {isLoaded ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-white font-bold text-xl rounded-xl">Verify</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => signUp.verifications.sendEmailCode()}>
+              <Text style={{
+                color: "#ffffff",
+                fontSize: 16,
+                fontWeight: "bold",
+                fontFamily: "Poppins-SemiBold",
+              }}>
+                I need a new code
               </Text>
             </TouchableOpacity>
           </View>
