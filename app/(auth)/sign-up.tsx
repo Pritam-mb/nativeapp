@@ -3,7 +3,7 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
-export default function SignInScreen() {
+export default function SignUpScreen() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("")
