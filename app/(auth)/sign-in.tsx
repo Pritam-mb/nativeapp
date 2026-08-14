@@ -14,45 +14,29 @@ import {
 } from "react-native";
 
 export default function SignInScreen() {
-  const { signIn, setActive, fetchStatus } = useSignIn();
+  const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const isLoading = fetchStatus === "fetching";
 
   const onSignIn = async () => {
-    if (!signIn) return;
+    if (!isLoaded) return;
     setError("");
+    setIsLoading(true);
     try {
-      const result = await signIn.password({
-        emailAddress: email,
+      const result = await signIn.create({
+        identifier: email,
         password: password,
       });
-      if (signIn.status === "complete") {
-        await signIn.finalize({
-          navigate: ({ session, decorateUrl }) => {
-            if (session?.currentTask) {
-              console.log(session?.currentTask);
-              return;
-            }
-            const url = decorateUrl("/");
-            router.replace(url as any);
-          },
-        });
-      } else if (signIn.status === "needs_second_factor") {
-        await signIn.mfa.sendPhoneCode();
-      } else if (signIn.status === "needs_first_factor") {
-        const emailCodeFactor = signIn.supportedSecondFactors.find(
-          (factor) => factor.strategy === "email_code"
-        );
-        if (emailCodeFactor) {
-          await signIn.mfa.sendPhoneCode();
-        }
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.replace("/");
       } else {
-        console.error("Sign-in attempt not complete:", signIn);
+        console.error("Sign-in attempt not complete:", result);
       }
     } catch (err: any) {
       const msg =
@@ -60,6 +44,8 @@ export default function SignInScreen() {
         err?.errors?.[0]?.message ||
         "Invalid email or password.";
       setError(msg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
