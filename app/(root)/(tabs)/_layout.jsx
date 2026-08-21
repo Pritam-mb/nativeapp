@@ -1,7 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Label } from "@react-navigation/elements";
 import { Tabs } from "expo-router";
+import { useUserStore } from "../../../store/userStor";
+
 
 export default function TabLayout() {
+    const isadmin = useUserStore((state) => state.isadmin) //fetching admin status
     return (
         <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: "#2563eb" }}>
             <Tabs.Screen
@@ -22,6 +26,19 @@ export default function TabLayout() {
                     ),
                 }}
             />
+
+
+            <Tabs.Screen
+                name="create"
+                options={{
+                    title: "ADD PROPERTY",
+                    href: isadmin ? undefined : null,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="add-circle" size={size} color={color} />
+                    ),
+                }}
+            />
+
             <Tabs.Screen
                 name="saved"
                 options={{

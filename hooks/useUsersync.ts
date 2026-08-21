@@ -6,7 +6,7 @@ import useSupabase from "./useSupabase";
 export function useUsersync() {
     const { user } = useUser() //this function basically is used for know is the user is login or not
 
-    const setisadmin = useUserStore((state) => state.setadmin) //fetching the admin status
+    const setisadmin = useUserStore((state) => state.setadmin) //assign the admin status
     const client = useSupabase()
 
     useEffect(() => {
@@ -50,7 +50,8 @@ export function useUsersync() {
                 console.error("Failed to insert user:", insertError);
                 return;
             }
-
+            // When the user logs in, useUsersync checks Supabase. If Supabase says "Yes,
+            //  this person is an admin", it calls setisadmin(true). It updates the "bank balance".
             setisadmin(newUser?.is_admin ?? false)
         } catch (err) {
             // 3. Catch network crashes, timeouts, etc.
