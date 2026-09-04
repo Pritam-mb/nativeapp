@@ -1,6 +1,7 @@
 export interface Property {
     id: string,
     title: string,
+    type: string,
     description: string,
     city: string,
     issold: boolean,

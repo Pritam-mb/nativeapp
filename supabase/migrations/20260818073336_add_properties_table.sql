@@ -3,6 +3,7 @@ create table properties (
     title text not null,
     description text not null,
     city text,
+    type text not null,
     issold boolean default false,
     price int  not null default 1,
     bedroom int  not null default 1,

@@ -6,6 +6,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import RecommendCard from "../../../components/Recommendcard";
 export default function HomeScreen() {
   const { user } = useUser()
   const router = useRouter()
@@ -27,7 +28,7 @@ export default function HomeScreen() {
 
     try {
       const { data: reccomendeddata, error: reccomendedError } = await supabase.from('properties').select('*')
-        .eq('is_featured', true)
+        .eq('is_featured', false)
         .order('created_at', { ascending: false })
         .limit(10)
       setreccomended(reccomendeddata ?? [])
@@ -48,6 +49,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
+        renderItem={({ item }) => <RecommendCard property={item} key={item.id} />}
         ListHeaderComponent={
           <View>
             {/* Top Navbar Row */}
@@ -132,7 +134,11 @@ export default function HomeScreen() {
             <Text className="text-gray-900 text-lg font-bold px-5 mb-4">
               Recommended
             </Text>
+            
           </View>
+        }
+        renderItem={({ item }) => (
+          <View><RecommendCard property={item} key={item.id}/></View>)
         }
       />
     </SafeAreaView>
